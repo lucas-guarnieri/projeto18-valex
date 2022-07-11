@@ -17,7 +17,7 @@ export async function apiKeyValidation(req: Request, res: Response, next: NextFu
         }
     }
 
-    res.locals.companyId = {companyId: company.id }
+    res.locals.companyId = {id: company.id }
 
     next()
 }
