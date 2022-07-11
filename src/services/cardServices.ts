@@ -32,7 +32,7 @@ export async function createEmployeeCard (employeeId: number, companyId: number,
 
 export async function checkCardType(type: TransactionTypes, employeeId: number) {
     const checkCardType = await cardRepository.findByTypeAndEmployeeId(type, employeeId);
-    if (!checkCardType) {
+    if (checkCardType) {
         throw {
             type: "cardError", message:"user already has same-type card", code:"409"
         }
