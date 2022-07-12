@@ -62,6 +62,7 @@ export async function getTransacitonsBalance(cardId: number) {
 
 export async function blockCard(cardId: number, password: string) {
     const card = await cardsUtils.getCardById(cardId);
+    cardsUtils.isCardAtive(card.password);
     cardsUtils.checkExpirationDate(card.expirationDate);
     if (card.isBlocked){
         throw {
@@ -74,6 +75,7 @@ export async function blockCard(cardId: number, password: string) {
 
 export async function unblockCard(cardId: number, password: string) {
     const card = await cardsUtils.getCardById(cardId);
+    cardsUtils.isCardAtive(card.password);
     cardsUtils.checkExpirationDate(card.expirationDate);
     if (!card.isBlocked){
         throw {
@@ -124,6 +126,8 @@ export async function passwordHash (password: string) {
     }
     return (bcrypt.hashSync(password, 10));
 }
+
+
 
 
 

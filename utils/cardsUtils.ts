@@ -48,3 +48,11 @@ export async function checkCardType(type: TransactionTypes, employeeId: number) 
         }
     }
 }
+
+export function isCardAtive(password:string) {
+    if (!password) {
+        throw {
+            type: "cardError", message:"card not activate", code:"406"
+        }
+    }
+}
