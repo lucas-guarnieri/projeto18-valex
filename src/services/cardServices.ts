@@ -101,7 +101,6 @@ function validateCVV(cvv: string, encryptedCVV: string) {
 function createCVV() {
     const cryptrKey = process.env.CRYPTR_KEY;
     const cvv = faker.finance.creditCardCVV();
-    console.log("CVV =", cvv);//TODO: delete
     const cryptr = new Cryptr(cryptrKey);
     const encryptedCVV : string = cryptr.encrypt(cvv);
     return encryptedCVV; 
