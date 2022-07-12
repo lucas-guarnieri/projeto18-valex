@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
 import { TransactionTypes } from "../repositories/cardRepository.js";
-import { createEmployeeCard, activateEmployeeCard, getTransacitonsBalance } from "../services/cardServices.js";
+import { 
+        createEmployeeCard, 
+        activateEmployeeCard, 
+        getTransacitonsBalance, 
+        blockCard, 
+        unblockCard 
+    } from "../services/cardServices.js";
 
 
 export async function createCard(req: Request, res: Response) {
@@ -29,4 +35,16 @@ export async function getCardBalance(req: Request, res: Response) {
     }
     const balance = await getTransacitonsBalance(cardId);
     res.status(200).send(balance); 
+}
+
+export async function blockEmployeeCard(req: Request, res: Response) {
+    const { cardId, password } : { cardId: number, password: string } = req.body;
+    await blockCard(cardId, password);
+    res.sendStatus(200);
+}
+
+export async function unblockEmployeeCard(req: Request, res: Response) {
+    const { cardId, password } : { cardId: number, password: string } = req.body;
+    await unblockCard(cardId, password);
+    res.sendStatus(200);
 }

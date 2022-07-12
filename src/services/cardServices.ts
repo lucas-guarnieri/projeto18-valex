@@ -59,6 +59,30 @@ export async function getTransacitonsBalance(cardId: number) {
     }
 }
 
+export async function blockCard(cardId: number, password: string) {
+    const card = await getCardById(cardId);
+    checkExpirationDate(card.expirationDate);
+    if (card.isBlocked){
+        throw {
+            type: "cardError", message:"card already blocked", code:"409"
+        }
+    };
+    await checkPassword(password, card.password);
+    await cardRepository.update(cardId, {isBlocked: true})
+}
+
+export async function unblockCard(cardId: number, password: string) {
+    const card = await getCardById(cardId);
+    checkExpirationDate(card.expirationDate);
+    if (!card.isBlocked){
+        throw {
+            type: "cardError", message:"card already unblocked", code:"409"
+        }
+    };
+    await checkPassword(password, card.password);
+    await cardRepository.update(cardId, {isBlocked: false});
+}
+
 
 function validateCVV(cvv: string, encryptedCVV: string) {
     const cryptrKey = process.env.CRYPTR_KEY;
@@ -127,12 +151,22 @@ function isCardFirstUse(cardPassword : string, cardIsBlocked: boolean) {
     return false;
 }
 
+
 export async function passwordHash (password: string) {
     if (password.length < 4) {
         throw {
             type: "cardError", message:"password too short", code:"406"
         }
     }
-    return ( bcrypt.hashSync(password, 10));
+    return (bcrypt.hashSync(password, 10));
+}
+
+export async function checkPassword (password: string, hashPassword: string) {
+    const check = bcrypt.compareSync(password, hashPassword);
+    if (!check) {
+        throw {
+            type: "authorizationError", message:"authorization error", code:"401"
+        }
+    }
 }
 
