@@ -35,7 +35,7 @@ export async function checkPassword (password: string, hashPassword: string) {
     const check = bcrypt.compareSync(password, hashPassword);
     if (!check) {
         throw {
-            type: "authorizationError", message:"authorization error", code:"401"
+            type: "authorizationError", message:"authorizationnnn error", code:"401"
         }
     }
 }

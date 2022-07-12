@@ -28,7 +28,7 @@ export async function activateCard(req: Request, res: Response) {
 
 export async function getCardBalance(req: Request, res: Response) {
     const cardId = parseInt(req.params.id);
-    if (!cardId) {
+    if (!cardId || cardId === NaN) {
         throw {
             type: "cardError", message:"missing id", code:"422"
         }
