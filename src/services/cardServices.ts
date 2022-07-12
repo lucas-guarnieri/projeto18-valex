@@ -4,6 +4,8 @@ import Cryptr from "cryptr";
 import bcrypt from 'bcrypt';
 import * as cardRepository from "../repositories/cardRepository.js"
 import * as employeeServices from "./employeeServices.js"
+import * as paymentsServices from "./paymentsServices.js"
+import * as rechargesServices from "./rechargesServices.js"
 import { TransactionTypes } from "../repositories/cardRepository.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -43,6 +45,20 @@ export async function activateEmployeeCard(cardId: number, cvv: string, password
     const passwordHashed = await passwordHash(password.toString());
     await cardRepository.update(cardId, {password: passwordHashed, isBlocked: false})
 }
+
+export async function getTransacitonsBalance(cardId: number) {
+    const card = await getCardById(cardId);
+    const payments = await paymentsServices.getPayments(card.id);
+    const recharges = await rechargesServices.getRecharges(card.id);
+    const balance = recharges.total - payments.total;
+
+    return {
+        balance,
+        transactions: payments.transactions,
+        recharges: recharges.transactions
+    }
+}
+
 
 function validateCVV(cvv: string, encryptedCVV: string) {
     const cryptrKey = process.env.CRYPTR_KEY;
