@@ -17,7 +17,12 @@ export function checkExpirationDate(expDate : string) {
     const today = dayjs().format('MM/YY');
     let [ expMonth, expYear ] = expDate.split("/");
     let [ nowMonth, nowYear ] = today.split("/");
-    if (nowYear >= expYear && nowMonth > expMonth){
+    if (nowYear > expYear){
+        throw {
+            type: "cardError", message:"expired card", code:"401"
+        }
+    }
+    if (nowYear === expYear && nowMonth > expMonth){
         throw {
             type: "cardError", message:"expired card", code:"401"
         }
